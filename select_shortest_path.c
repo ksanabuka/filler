@@ -19,6 +19,11 @@ typedef struct  s_token
     int len_token_coord;
 }   t_token;
 
+validate_coords(int ** map, int r, int c, int map_row_max, int map_col_max)
+{
+
+}
+
 int calc_path_token_on_map(int my_row, int my_col, int t_row, int t_col, int tl, int * tc, int ** map)
 {
     int res = 0;
@@ -26,9 +31,6 @@ int calc_path_token_on_map(int my_row, int my_col, int t_row, int t_col, int tl,
 
     int t_r_corellation;
     int t_c_corellation; 
-
-   
-    res = 
 
     while (i < tl)
     {
@@ -40,9 +42,9 @@ int calc_path_token_on_map(int my_row, int my_col, int t_row, int t_col, int tl,
             cur_col = tc[i + 1]; 
             t_r_corellation = cur_row - t_row + my_row; 
             t_c_corellation = cur_col - t_col + my_col;
-            res+= tc[t_r_corellation][t_c_corellation];
+            validate_coords(map, r, c, map_row_max, map_col_max); 
+            res+= map[t_r_corellation][t_c_corellation];
         }
         i = i + 2; 
-
     }
 }
