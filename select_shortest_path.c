@@ -6,25 +6,14 @@ t_coord take_shortest_path(t_coord my_coord, t_coord en_coord, t_token token, in
     // try to  put token on all possible positions on each my cell; select one of best one. 
     // same scoring: close area
 
-typedef struct  s_coord
+int check_coord(int tr, int tc, int map_max_row, int map_max_col, int ** map)
 {
-    int row;
-    int col;
-}   t_coord;
-    
-    
-typedef struct  s_token
-{
-    int *token_coord;
-    int len_token_coord;
-}   t_token;
-
-validate_coords(int ** map, int r, int c, int map_row_max, int map_col_max)
-{
-
+    if ((tr >= map_max_row) || tr < 0 || (tc >= map_max_col) || tc < 0)
+        return 0;
+    return 1; 
 }
 
-int calc_path_token_on_map(int my_row, int my_col, int t_row, int t_col, int tl, int * tc, int ** map)
+int calc_path_token_on_map(int my_row, int my_col, int t_row, int t_col, int tl, int * tc, int ** map, int map_max_row, int map_max_col)
 {
     int res = 0;
     int i = 0;
@@ -42,9 +31,12 @@ int calc_path_token_on_map(int my_row, int my_col, int t_row, int t_col, int tl,
             cur_col = tc[i + 1]; 
             t_r_corellation = cur_row - t_row + my_row; 
             t_c_corellation = cur_col - t_col + my_col;
-            validate_coords(map, r, c, map_row_max, map_col_max); 
-            res+= map[t_r_corellation][t_c_corellation];
+            if (check_coord(t_r_corellation, t_c_corellation, map_max_row, map_max_col, map) && map[t_r_corellation][t_c_corellation] > 0)
+                res+= map[t_r_corellation][t_c_corellation];
+            else 
+                return 0; 
         }
         i = i + 2; 
+
     }
 }

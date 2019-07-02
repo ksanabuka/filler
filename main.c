@@ -8,6 +8,23 @@ void	error(char *message)
 	exit(1);
 }
 
+void print_int_arr(int * arr, int len)
+{
+	int a = 0;
+	while (a < len)
+		ft_printf("%d\t", arr[a++]);
+}
+
+void print2d_int_array(int ** arr, t_dim *map_dim)
+{
+	int i = 0;
+
+	while (i < map_dim->row_max)
+	{
+		print_int_arr(arr[i++], map_dim->column_max);
+		ft_printf("We are here\n");
+	}
+}
 
 int get_num_players(char *s, t_filler * filler)
 {
@@ -129,14 +146,9 @@ t_filler *init_struct(void)
 		return (filler);
 }
 
-void print_int_arr(int * arr, int len)
-{
-	int a = 0;
-	while (a < len)
-		ft_printf("%d  ", arr[a++]);
-}
 
-int ** init_int_map(t_dim map_dim)
+
+int ** init_int_map(t_dim* map_dim)
 {
 	int i = 0;
 	int j = 0;
@@ -144,14 +156,14 @@ int ** init_int_map(t_dim map_dim)
 	int_map = (int**)malloc(sizeof(int*) * map_dim->row_max);
 	while (i < map_dim->row_max)
 	{
-		int_map[i] = (int*)malloc(sizeof(int) * map_dim->col_max);
+		int_map[i] = (int*)malloc(sizeof(int) * map_dim->column_max);
 		i++;
 	}
 	i = 0; 
 	while (i < map_dim->row_max)
 	{
 		j = 0; 
-		while(j <  map_dim->col_max)
+		while(j <  map_dim->column_max)
 		{
 			int_map[i][j]= 0;
 			j++;
@@ -162,147 +174,139 @@ int ** init_int_map(t_dim map_dim)
 }
 
 
-int mark1cell(int value, int ** map, t_coord *coords, t_dim *map_dim)
+int mark1cell(int level, int ** map, t_coord *coords, t_dim *map_dim)
 {
-	int level = 1; 
 	int was_marked = 0; 
-	if (coords->row + level <  map_dim->row_max) && (map[coords->row + level][coords->col] == 0)
+	if ((coords->row + level <  map_dim->row_max) && (map[coords->row + level][coords->col] == 0))
 	{
-		map[coords->row + level][coords->col] = value;
+		map[coords->row + level][coords->col] = level;
 		was_marked++;
 	}
-	if (coords->row - level >=  0) && (map[coords->row - level][coords->col] == 0)
+	if ((coords->row - level >=  0) && (map[coords->row - level][coords->col] == 0))
 	{	
-		map[coords->row - level][coords->col] = value; 
+		map[coords->row - level][coords->col] = level; 
 		was_marked++;
 	}
-	if (coords->col + level <  map_dim->col_max) && (map[coords->row][coords->col + level] == 0)
+	if ((coords->col + level <  map_dim->column_max) && (map[coords->row][coords->col + level] == 0))
 	{	
-		map[coords->row][coords->col + level] = value;
+		map[coords->row][coords->col + level] = level;
 		was_marked++;
 	}
 
-	if (coords->col - level >=  0) && (map[coords->row][coords->col - level] == 0)
+	if ((coords->col - level >=  0) && (map[coords->row][coords->col - level] == 0))
 	{	
-		map[coords->row][coords->col - level] = value; 
+		map[coords->row][coords->col - level] = level; 
 		was_marked++;
 	}
 	
-	if (coords->row + level <  map_dim->row_max) && (coords->col - level >= 0)\
-		&& (map[coords->row + level][coords->col - level] == 0)
+	if ((coords->row + level <  map_dim->row_max) && (coords->col - level >= 0)\
+		&& (map[coords->row + level][coords->col - level] == 0))
 	{
-		map[coords->row + level][coords->col - level] = value;
+		map[coords->row + level][coords->col - level] = level;
 		was_marked++;
 	}
 	
-	if (coords->row + level <  map_dim->row_max) && (coords->col + level < map_dim->col_max)\
-		&& (map[coords->row + level][coords->col + level] == 0)
+	if ((coords->row + level <  map_dim->row_max) && (coords->col + level < map_dim->column_max)\
+		&& (map[coords->row + level][coords->col + level] == 0))
 	{
-		map[coords->row + level][coords->col + level] = value;
+		map[coords->row + level][coords->col + level] = level;
 		was_marked++;
 	}
 
-	if (coords->row - level >= 0) && (coords->col - level >= 0)\
-		&& (map[coords->row - level][coords->col - level] == 0)
+	if ((coords->row - level >= 0) && (coords->col - level >= 0)\
+		&& (map[coords->row - level][coords->col - level] == 0))
 	{
-		map[coords->row - level][coords->col - level] = value;
+		map[coords->row - level][coords->col - level] = level;
 		was_marked++;
 	}
 
-	if (coords->row - level >= 0) && (coords->col + level < map_dim->col_max)\
-		&& (map[coords->row - level][coords->col + level] == 0)
+	if ((coords->row - level >= 0) && (coords->col + level < map_dim->column_max)\
+		&& (map[coords->row - level][coords->col + level] == 0))
 	{
-		map[coords->row - level][coords->col + level] = value;
+		map[coords->row - level][coords->col + level] = level;
 		was_marked++;
 	}
 
 return was_marked;
 }
 
-void check_mark_neibours(int value, int ** map, t_coord *coords, t_dim *map_dim, int value_to_surround, int level); 
+void check_mark_neibours(int *level, int ** map, t_coord *coords, t_dim *map_dim, int value_to_surround)
 {
-	t_coord newcoords;
 	int was_marked = 1;
-	int min = (map_dim->row_max > map_dim->col_max)?map_dim->col_max: map_dim->row_max;
+	t_coord newcoord; 
 
-	while (was_marked != 0 && *level < min )
-	{
-		was_marked = 0; 
-		if (coords->row + level <  map_dim->row_max) && (map[coords->row + level][coords->col] == value_to_surround)
+		if ((coords->row + *level <  map_dim->row_max) && (map[coords->row + *level][coords->col] == value_to_surround))
 		{
-			newcoords.row = coords->row + level;
-			newcoords.col = coords->col;
-			was_marked+= mark1cell(value, map, newcoords, map_dim);
-			check_mark_neibours(value, map, newcoords, map_dim, value_to_surround, level); 
+			newcoord.row = coords->row + *level;
+			newcoord.col = coords->col; 
+			was_marked+= mark1cell(*level, map, &newcoord, map_dim);
+			check_mark_neibours(level, map, &newcoord, map_dim, value_to_surround); 
 		}
-		if (coords->row - level >=  0) && (map[coords->row - level][coords->col] == value_to_surround)
+		if ((coords->row - *level >=  0) && (map[coords->row - *level][coords->col] == value_to_surround))
 		{
-			newcoords.row = coords->row - level;
-			newcoords.col = coords->col;
-			was_marked+= mark1cell(value, map, newcoords, map_dim);
-			check_mark_neibours(value, map, newcoords, map_dim, value_to_surround, level); 
-		}	
-		if (coords->col + level <  map_dim->col_max) && (map[coords->row][coords->col + level] == value_to_surround)
+			newcoord.row = coords->row - *level;
+			newcoord.col = coords->col; 
+			was_marked+= mark1cell(*level, map, &newcoord, map_dim);
+			check_mark_neibours(level, map, &newcoord, map_dim, value_to_surround); 
+		}
+		
+		if ((coords->col + *level <  map_dim->column_max) && (map[coords->row][coords->col + *level] == value_to_surround))
 		{
-			newcoords.row = coords->row;
-			newcoords.col = coords->col + level;
-			was_marked+= mark1cell(value, map, newcoords, map_dim);
-			check_mark_neibours(value, map, newcoords, map_dim, value_to_surround, level); 
+			newcoord.row = coords->row;
+			newcoord.col = coords->col + *level; 
+			was_marked+= mark1cell(*level, map, &newcoord, map_dim);
+			check_mark_neibours(level, map, &newcoord, map_dim, value_to_surround); 
 		}	
-		if (coords->col - level >=  0) && (map[coords->row][coords->col - level] == value_to_surround)
+		if ((coords->col - *level >=  0) && (map[coords->row][coords->col - *level] == value_to_surround))
 		{
-			newcoords.row = coords->row;
-			newcoords.col = coords->col - level;
-			was_marked+= mark1cell(value, map, newcoords, map_dim);
-			check_mark_neibours(value, map, newcoords, map_dim, value_to_surround, level); 
+			newcoord.row = coords->row;
+			newcoord.col = coords->col - *level; 
+			was_marked+= mark1cell(*level, map, &newcoord, map_dim);
+			check_mark_neibours(level, map, &newcoord, map_dim, value_to_surround); 
 		}	
-		if (coords->row + level <  map_dim->row_max) && (coords->col - level >= 0)\
-			&& (map[coords->row + level][coords->col - level] == value_to_surround)
+		if ((coords->row + *level <  map_dim->row_max) && (coords->col - *level >= 0)\
+			&& (map[coords->row + *level][coords->col - *level] == value_to_surround))
 		{
-			newcoords.row = coords->row + level;
-			newcoords.col = coords->col - level;
-			was_marked+= mark1cell(value, map, newcoords, map_dim);
-			check_mark_neibours(value, map, newcoords, map_dim, value_to_surround, level); 
+			newcoord.row = coords->row + *level;
+			newcoord.col = coords->col - *level; 
+			was_marked+= mark1cell(*level, map, &newcoord, map_dim);
+			check_mark_neibours(level, map, &newcoord, map_dim, value_to_surround); 
 		}	
-		if (coords->row + level <  map_dim->row_max) && (coords->col + level < map_dim->col_max)\
-			&& (map[coords->row + level][coords->col + level] == value_to_surround)
+		if ((coords->row + *level <  map_dim->row_max) && (coords->col + *level < map_dim->column_max)\
+			&& (map[coords->row + *level][coords->col + *level] == value_to_surround))
 		{
-			newcoords.row = coords->row + level;
-			newcoords.col = coords->col + level;
-			was_marked+= mark1cell(value, map, newcoords, map_dim);
-			check_mark_neibours(value, map, newcoords, map_dim, value_to_surround, level); 
+			newcoord.row = coords->row + *level;
+			newcoord.col = coords->col + *level; 
+			was_marked+= mark1cell(*level, map, &newcoord, map_dim);
+			check_mark_neibours(level, map, &newcoord, map_dim, value_to_surround); 
 		}	
-		if (coords->row - level >= 0) && (coords->col - level >= 0)\
-			&& (map[coords->row - level][coords->col - level] == value_to_surround)
+		if ((coords->row - *level >= 0) && (coords->col - *level >= 0)\
+			&& (map[coords->row - *level][coords->col - *level] == value_to_surround))
 		{
-			newcoords.row = coords->row - level;
-			newcoords.col = coords->col - level;
-			was_marked+= mark1cell(value, map, newcoords, map_dim);
-			check_mark_neibours(value, map, newcoords, map_dim, value_to_surround, level); 
+			newcoord.row = coords->row - *level;
+			newcoord.col = coords->col - *level; 
+			was_marked+= mark1cell(*level, map, &newcoord, map_dim);
+			check_mark_neibours(level, map, &newcoord, map_dim, value_to_surround); 
 		}	
-		if (coords->row - level >= 0) && (coords->col + level < map_dim->col_max)\
-			&& (map[coords->row - level][coords->col + level] == value_to_surround)
+		if ((coords->row - *level >= 0) && (coords->col + *level < map_dim->column_max)\
+			&& (map[coords->row - *level][coords->col + *level] == value_to_surround))
 		{
-			newcoords.row = coords->row - level;
-			newcoords.col = coords->col + level;
-			was_marked+= mark1cell(value, map, newcoords, map_dim);
-			check_mark_neibours(value, map, newcoords, map_dim, value_to_surround, level); 
+			newcoord.row = coords->row - *level;
+			newcoord.col = coords->col + *level; 
+			was_marked+= mark1cell(*level, map, &newcoord, map_dim);
+			check_mark_neibours(level, map, &newcoord, map_dim, value_to_surround); 
 		}	
-
-		level++;
-		value++;
-	}
-
 }
 
 void int_map2digs(int ** map, t_coord *en_coords, t_dim *map_dim)
 {
 	int value_to_surround = map[en_coords->row][en_coords->col];
 	int value = 1;
-	int level = 0; 
 
-	mark1cell(value, map, coords, map_dim);
-	check_mark_neibours(1, map, coords, map_dim, value_to_surround, 1);
+	mark1cell(value, map, en_coords, map_dim);
+	print2d_int_array(map, map_dim);
+	check_mark_neibours(&value, map, en_coords, map_dim, value_to_surround);
+	print2d_int_array(map, map_dim);
 }
 
 
@@ -310,7 +314,7 @@ int ** convert_map_2_int_map(char **char_map, t_dim *map_dim, int enemy)
 {
 	int row = 0;
 	int col = 0; 
-	t_coord en_coords;
+	t_coord *en_coords = (t_coord *)malloc(sizeof(t_coord));
 
 	int ** int_map = init_int_map(map_dim);
 
@@ -324,8 +328,8 @@ int ** convert_map_2_int_map(char **char_map, t_dim *map_dim, int enemy)
 				if (enemy == -1)
 				{
 					int_map[row][col] = -1; 
-					en_coords.row = row;
-					en_coords.col = col; 
+					en_coords->row = row;
+					en_coords->col = col; 
 				}
 				else 
 					int_map[row][col] = -2; 
@@ -335,31 +339,24 @@ int ** convert_map_2_int_map(char **char_map, t_dim *map_dim, int enemy)
 				if (enemy == -1)
 				{
 					int_map[row][col] = -2; 
-					en_coords.row = row;
-					en_coords.col = col; 
+					en_coords->row = row;
+					en_coords->col = col; 
 				}
 				else 
 					int_map[row][col] = -1; 
 			}
 			else 
-				int_map[row][col] = '0';
+				int_map[row][col] = 0;
 			col++;
 		}
-		row++
+		row++;
 	}
+	print2d_int_array(int_map, map_dim);
 	int_map2digs(int_map, en_coords, map_dim);
 	return (int_map);
-
 }
 
 
-void print2d_int_array(int ** arr, t_dim *map_dim)
-{
-	int i = 0;
-
-	while (i < map_dim->row_max)
-		print_int_arr(arr[i++], map_dim->col_max);
-}
 
 
 int main(int ac, char ** av)
@@ -385,10 +382,10 @@ int main(int ac, char ** av)
 		get_token(fd, filler);
 
 		convert_token2coord(filler->token->token_dim->row_max, filler->token->token_dim->column_max, filler->token->char_token, &filler->token->token_coord);
-		print_int_arr(filler->token->token_coord, 84);
+	//	print_int_arr(filler->token->token_coord, 84);
 
 		filler->int_map = convert_map_2_int_map(filler->char_map, filler->map_dim, filler->enemy);
-		print2d_int_array(filler->int_map, t_dim *map_dim);
+		print2d_int_array(filler->int_map, filler->map_dim);
 
 		cleanup(filler);
 	}

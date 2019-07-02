@@ -3,7 +3,6 @@
 void convert_token2coord(int row_max, int column_max, char **s, int **int_token)
 {
 	int len;
-
 	len = row_max * column_max * 2; 
 	*int_token = (int*)malloc(sizeof(int) * len);
 	int * tc = *int_token;
