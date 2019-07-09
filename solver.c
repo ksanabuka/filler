@@ -39,4 +39,5 @@ void convert_token2coord(int row_max, int column_max, char **s, int **int_token)
 		}
 		real_row++; 
 	}
+	print_int_arr(tc, 8);
 }
