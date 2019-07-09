@@ -334,9 +334,9 @@ int r_coord_in_list(int r, int c, int *checked_coord_stack)
 }
 
 
-int * init_stack_checked_coord(t_dim *map_dim)
+int * init_arr_coord(t_dim *map_dim, int qtycoord)
 {
-	int stack_size = 2 * map_dim->column_max * map_dim->row_max + 1; 
+	int stack_size = qtycoord * map_dim->column_max * map_dim->row_max + 1; 
 	int * checked_coord_stack = (int *)malloc(sizeof(int) * stack_size);
 	int i = 0;
 	while (i < stack_size)
@@ -483,7 +483,7 @@ void int_map2digs(int ** map, t_coord *en_coords, t_dim *map_dim)
 	// int max = (map_dim->row_max > map_dim->column_max)? map_dim->row_max : map_dim->column_max; 
 	while (is_any_empty(map, map_dim) && value_to_surround)
 	{	
-		checked_coord_stack = init_stack_checked_coord(map_dim);
+		checked_coord_stack = init_arr_coord(map_dim, 2);
 		mark_cell(level, map, en_coords, map_dim, &checked_coord_stack);
 		check_mark_neibours(&level, map, en_coords, map_dim, value_to_surround, &checked_coord_stack);
 		print2d_int_array(map, map_dim);

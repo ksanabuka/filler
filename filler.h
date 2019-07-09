@@ -39,4 +39,5 @@ typedef struct  s_filler
 
 void convert_token2coord(int row_max, int column_max, char **s, int **int_token);
 int r_coord_in_list(int r, int c, int * checked_coord_stack); 
-void print_int_arr(int * arr, int len); 
+void print_int_arr(int * arr, int len);
+int * init_arr_coord(t_dim *map_dim, int qtycoord);
