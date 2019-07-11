@@ -1,4 +1,4 @@
-// gcc -Wall -Werror -Wextra -g -fsanitize=address ./inc/gnl/get_next_line.c main.c solver.c -L ./inc/gnl/libft -lft -L ./inc/ft_printf -lftprintf -I ./inc/ft_printf/parser.h   -I./inc/gnl -I./inc/gnl/libft -o obuksha.filler
+// gcc -Wall -Werror -Wextra -g -fsanitize=address ./inc/gnl/get_next_line.c main.c solver.c selecting_hod.c -L ./inc/gnl/libft -lft -L ./inc/ft_printf -lftprintf -I ./inc/ft_printf/parser.h   -I./inc/gnl -I./inc/gnl/libft -o obuksha.filler
 //./filler_vm -f maps/map00 -p1 players/abanlin.filler -p2 players/champely.filler -sjk
 #include "filler.h"
 
@@ -69,6 +69,7 @@ void print_2d_map(char ** map, int rows)
 	int i = 0;
 	while (i < rows)
 		ft_printf("%s\n", map[i++]);
+	ft_printf("\n");
 }
 
 char  ** char_map_init(int rows, int columns)
@@ -321,9 +322,9 @@ int r_coord_in_list(int r, int c, int *checked_coord_stack)
 	
 	i = 1;
 	 
-	if (checked_coord_stack && checked_coord_stack[0] > 0)
+	if (checked_coord_stack && checked_coord_stack[0] > 0 && checked_coord_stack[i] != -2147483648)
 	{
-		while (i < checked_coord_stack[0])
+		while (i < checked_coord_stack[0] && checked_coord_stack[i] != -2147483648)
 		{
 			if (checked_coord_stack[i] == r && checked_coord_stack[i + 1] == c)
 				return 1;
@@ -568,17 +569,19 @@ int main(int ac, char ** av)
 			error("reading token dimensions");
 		get_token(fd, filler);
 
-		convert_token2coord(filler->token->token_dim->row_max, filler->token->token_dim->column_max, filler->token->char_token, &filler->token->token_coord);
-	//	print_int_arr(filler->token->token_coord, 84);
-
+		filler->token->token_coord = convert_token2coord(filler->token->token_dim->row_max, filler->token->token_dim->column_max, filler->token->char_token);
 		filler->int_map = convert_map_2_int_map(filler->char_map, filler->map_dim, filler->enemy);
+		
+		int *my_coord = init_arr_coord(filler->map_dim, 2);
+		add_my_initial_coords(&my_coord, filler->int_map, filler->map_dim);
+
+ 		put_first_token(filler->int_map, filler->map_dim, filler->token->token_coord, my_coord);
+		print_int_arr(my_coord, my_coord[0]);
+
 		print2d_int_array(filler->int_map, filler->map_dim);
 
 		cleanup(filler);
 	}
-	
-	// ft_printf("%d %d\n", filler->enemy, filler->me);
-	// ft_printf("%d %d\n", filler->map_dim->row_max, filler->map_dim->column_max);
 	close(fd);
 	return 0;
 }

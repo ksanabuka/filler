@@ -1,73 +1,57 @@
 #include "filler.h"
 
-int is_my_cell(int *my_cells_coord, t_coord *cur_coord)
+int *create_map_token_coord(t_coord * token_joint_cell, t_coord * map_joint_cell,  int *token_coord, t_dim *map_dim)
 {
-   
-    int i;
+    int * map_token_coord = init_arr_coord(map_dim, 2);
 
-    i = 1;
-	while (i < my_cells_coord)
-	{
-		c = 0; 
-		while (c < map_dim->column_max)
-		{
-			if (my_cells_coord[i] == cur_coord->row && my_cells_coord[i + 1] == cur_coord->row)
-			c++; 
-		}
-		r++;
-	}
 
-}
-
-int *create_map_token_coord(t_coord * token_joint_cell, t_coord * map_joint_cell,  int *token_coord)
-{
-    int * map_token_coord = (int*)malloc(sizeof(int) * token_coord[0]);
-    if (token_coord && token_coord[0] > 1)
+    int r_dif = map_joint_cell->row - token_joint_cell->row;
+    int c_dif = map_joint_cell->col - token_joint_cell->col;
+    int i = 1;
+    while (i < token_coord[0] && token_coord[i] != -2147483648)
     {
-        map_token_coord[0] = token_coord[0]; 
-        int r_dif = map_joint_cell->row - token_joint_cell->row;
-        int c_dif = map_joint_cell->col - token_joint_cell->col;
-        int i = 1;
-        while (i < token_coord[0])
-        {
-            map_token_coord[i] = r_dif + token_coord[i]; 
-            map_token_coord[i + 1] = c_dif + token_coord[i + 1];
-            i = i + 2;
-        }
-        return map_token_coord;
+        map_token_coord[i] = r_dif + token_coord[i]; 
+        map_token_coord[i + 1] = c_dif + token_coord[i + 1];
+        i = i + 2;
     }
-    else 
-        return 0; 
+    return map_token_coord;
+    
+    
 }
 
-int r_valid_coord(int *map_token_coord, int ** map, int max_row, int max_col)
+int r_valid_coord(int *map_token_coord, int max_row, int max_col)
 {
     int j = 1; 
 
-    while (j < map_token_coord[0])
+    while (j < map_token_coord[0] &&  map_token_coord[j] != -2147483648)
     {
         if (map_token_coord[j] >= 0 && map_token_coord[j + 1] >= 0 && \
            map_token_coord[j] < max_row && map_token_coord[j + 1] < max_col )
-           j = j + 2; 
+           j = j + 2;
         else 
-            return 0; 
+            return 0;
+       
     }
     return 1; 
 }
 
 int can_put_on_map(int *map_token_coord, int ** map, t_coord * map_joint_cell, t_dim *map_dim)
-{
-    int i = 0;
+{ 
     int j = 1;
      
-    if (r_valid_coord(map_token_coord, map, map_dim->row_max, map_dim->column_max))
+    if (r_valid_coord(map_token_coord, map_dim->row_max, map_dim->column_max))
          ;
     else 
         return 0; 
 
-    while (j < map_token_coord[0])
+    while (j < map_token_coord[0] && map_token_coord[j] != -2147483648)
     {
-        if ((map[j][j + 1] == 0) || (map[j][j + 1] == -1 && j == map_joint_cell->row && j + 1 == map_joint_cell->col))
+        ft_printf("map: %d, 2: %d\n", map[map_token_coord[j]][map_token_coord[j + 1]], map[map_token_coord[j]][map_token_coord[j + 1]]); 
+
+
+        if (((map[map_token_coord[j]][map_token_coord[j + 1]] != -2) && \
+            (map[map_token_coord[j]][map_token_coord[j + 1]] != -1)) || \
+            (map[map_token_coord[j]][map_token_coord[j + 1]] == -1 && map_token_coord[j] == map_joint_cell->row && map_token_coord[j + 1] == map_joint_cell->col))
         {
             j = j + 2; 
         }
@@ -82,10 +66,9 @@ int put_score_token_on_map(int *map_token_coord, int ** map)
     int j = 1; 
     int score = 0;
 
-    while (j < map_token_coord[0])
+    while (j < map_token_coord[0] && map_token_coord[j] != -2147483648)
     {
         score += map[map_token_coord[j]][map_token_coord[j + 1]];
-    //    map[map_token_coord[j]][map_token_coord[j + 1]] = -1;
         j = j + 2;
     }
     return score + 1;
@@ -94,7 +77,11 @@ int put_score_token_on_map(int *map_token_coord, int ** map)
 int give_score_for_token(int ** map, t_dim *map_dim, t_coord * token_joint_cell, t_coord * map_joint_cell,  int *token_coord)
 {
     int score = 0; 
-    int * map_token_coord = create_map_token_coord(token_joint_cell, map_joint_cell,  token_coord);
+    int * map_token_coord = create_map_token_coord(token_joint_cell, map_joint_cell,  token_coord, map_dim);
+
+    ft_printf("map_token_coord\n");
+    print_int_arr(map_token_coord, map_token_coord[0]);
+
     if (can_put_on_map(map_token_coord, map, map_joint_cell, map_dim))
     {
         score = put_score_token_on_map(map_token_coord, map); 
@@ -103,23 +90,26 @@ int give_score_for_token(int ** map, t_dim *map_dim, t_coord * token_joint_cell,
     return score; 
 }
 
-
-
-
-void add_captured_cells(t_coord *captured_coord, int * my_captured_cells) 
+void add_captured_cells(int * map_token_coord, int *my_coord)
 {
-   int j = 1;
+    int j = 1;
+    int i = 1; 
 
-    while (j < my_captured_cells[0] && my_captured_cells[j] != -2147483648)
+    while (j < my_coord[0] && my_coord[j] != -2147483648)
+        j = j + 2; 
+    
+    if (j < my_coord[0] && my_coord[j] == -2147483648)
     {
-        j = j + 2;
-    }
-    if (j < my_captured_cells[0] && my_captured_cells[j] == -2147483648)
-    {
-        my_captured_cells[j] = captured_coord->row;
-        my_captured_cells[j + 1] = captured_coord->col;
+         while (i < map_token_coord[0] && map_token_coord[i] != -2147483648 &&\
+                j < my_coord[0] && my_coord[j] == -2147483648)
+        {
+            my_coord[j] = map_token_coord[i];
+            i++;
+            j++; 
+        }
     }
 }
+
 int tracking_scoring_for_1_mapcell(int ** map, t_dim *map_dim, t_coord * map_joint_cell,  int *token_coord, int ** token_map_score, int start_index)
 {
    
@@ -127,49 +117,76 @@ int tracking_scoring_for_1_mapcell(int ** map, t_dim *map_dim, t_coord * map_joi
     int score = 0; 
     t_coord * token_joint_cell = (t_coord *)malloc(sizeof(t_coord));
    
-   while (i < token_coord[0])
+   while (i < token_coord[0] && token_coord[i] != -2147483648)
    {
         token_joint_cell->row = token_coord[i]; 
         token_joint_cell->col = token_coord[i + 1];
-        score = 0; 
+        score = give_score_for_token(map, map_dim, token_joint_cell, map_joint_cell, token_coord); 
 
-        if ((score == give_score_for_token(map, map_dim, token_joint_cell, map_joint_cell, token_coord)) > 0) 
+        if (score > 0) 
         {
             (*token_map_score)[start_index] = token_joint_cell->row;
             (*token_map_score)[start_index + 1] = token_joint_cell->col;
             (*token_map_score)[start_index + 2] = map_joint_cell->row;
             (*token_map_score)[start_index + 3] = map_joint_cell->col;
             (*token_map_score)[start_index + 4] = score;
-            start_index += start_index + 5;
+            start_index = start_index + 5;
 
         }
         i = i + 2; 
+
+      
    }
+   
+
+    //   ft_printf("\n %d\n(*token_map_score)\n", start_index);
+    //     print_int_arr((*token_map_score), (*token_map_score)[0]);
    free(token_joint_cell);
    return (start_index == 1) ? 0 : start_index;
 }
 
-void tracking_scoring(int ** map, t_dim *map_dim, int *token_coord, int *my_coord, int * token_map_score)
+int find_best_score_position(int * token_map_score)
 {
-     int start_index = 1;
-    int j = 1; 
+     int j = 1;
+    int tmp; 
+    int position = 0; 
+    while (j < token_map_score[0])
+    {
+        tmp = token_map_score[j + 5];
+        if (token_map_score[j + 5] > tmp)
+        {
+            position = j - 5; 
+        }
+        j = j + 5; 
+    }
+    return position; 
+}
+
+int tracking_scoring(int ** map, t_dim *map_dim, int *token_coord, int *my_coord, int ** token_map_score)
+{
+    int start_index = 1;
+    int j = 1;
 
     t_coord * map_joint_cell = (t_coord *)malloc(sizeof(t_coord));
    
-    while (j < my_coord[0])
+    while (j < my_coord[0] && my_coord[j] != -2147483648)
     {
         map_joint_cell->row = my_coord[j]; 
         map_joint_cell->col = my_coord[j + 1];
         start_index += tracking_scoring_for_1_mapcell(map, map_dim, map_joint_cell, token_coord, token_map_score, start_index);
         j = j + 2; 
     }
+
+    free(map_joint_cell);
+   return find_best_score_position(*token_map_score);
+
 }
 
-int put_token_on_map(int *map_token_coord, int ** map, t_coord * map_joint_cell, t_coord * token_joint_cell)
+int put_token_on_map(int *map_token_coord, int ** map)
 {
     int j = 1; 
     int score = 0;
-
+   
     while (j < map_token_coord[0])
     {
         score += map[map_token_coord[j]][map_token_coord[j + 1]];
@@ -178,4 +195,54 @@ int put_token_on_map(int *map_token_coord, int ** map, t_coord * map_joint_cell,
     }
     return score + 1;
 }
- int * token_map_score = init_arr_coord(map_dim, 5);
+
+ void put_first_token(int ** map, t_dim *map_dim, int *token_coord, int *my_coord)
+{
+    int score = 0;
+    int * token_map_score = init_arr_coord(map_dim, 5);
+    
+    int position = tracking_scoring(map, map_dim, token_coord, my_coord, &token_map_score);
+    
+    t_coord * token_joint_cell = (t_coord * )malloc(sizeof(t_coord));
+    token_joint_cell->row = token_map_score[position]; 
+    token_joint_cell->col = token_map_score[position + 1];
+
+    t_coord * map_joint_cell = (t_coord * )malloc(sizeof(t_coord));
+    map_joint_cell->row = token_map_score[position + 2]; 
+    map_joint_cell->col = token_map_score[position + 3];
+
+
+
+   int * map_token_coord = create_map_token_coord(token_joint_cell, map_joint_cell, token_coord, map_dim);
+    score = put_token_on_map(map_token_coord, map);
+    void add_captured_cells(int * map_token_coord, int *my_coord);
+
+    print2d_int_array(map, map_dim);
+
+    free(token_joint_cell);
+    free(map_joint_cell);
+}
+
+
+void add_my_initial_coords(int ** my_coord, int ** map, t_dim *map_dim)
+{
+    int i;
+	int j = 0;
+	
+	i = 0; 
+	while (i < map_dim->row_max)
+	{
+		j = 0; 
+		while(j <  map_dim->column_max)
+		{
+			if (map[i][j] == -1)
+            {
+                (*my_coord)[1] = i;
+                (*my_coord)[2] = j;
+                return ; 
+            }
+			j++;
+		}
+		i++;
+	} 
+}
