@@ -39,6 +39,6 @@ int *convert_token2coord(int row_max, int column_max, char **s)
 		}
 		real_row++; 
 	}
-	print_int_arr(tc, tc[0]);
+	//print_int_arr(tc, tc[0]);
 	return tc;
 }
