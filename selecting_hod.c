@@ -252,10 +252,10 @@ int put_token_on_map(int *map_token_coord, int ** map)
 //     ft_printf("\n\n");
 
     score = put_token_on_map(map_token_coord, map);
-    ft_putnbr_fd(map_token_coord[1], 0);
-    write(0, " ", 1);
-    ft_putnbr_fd(map_token_coord[2], 0);
-    write(0, "\n", 1);
+    ft_putnbr_fd(map_token_coord[1], 1);
+    write(1, " ", 1);
+    ft_putnbr_fd(map_token_coord[2], 1);
+    write(1, "\n", 1);
     add_captured_cells(map_token_coord, my_coord, map_joint_cell->row, map_joint_cell->col);
     //print_int_arr(my_coord, my_coord[0]);
 

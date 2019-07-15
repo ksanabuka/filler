@@ -28,13 +28,13 @@ void print2d_int_array(int ** arr, t_dim *map_dim)
 	}
 }
 
-int get_num_players(char *s, t_filler * filler)
+int get_num_players(char *s, t_players_id * players_id)
 {
 	if ((*(s + 10) != '1') && (*(s + 10) != '2'))
 		return (0); 
 
-	filler->me = (*(s + 10) == '1')? 'O' : 'X';
-	filler->enemy = (*(s + 10) == '1')? 'X' : 'O';
+	players_id->me = (*(s + 10) == '1')? 'O' : 'X';
+	players_id->enemy = (*(s + 10) == '1')? 'X' : 'O';
 
 	// filler->me = (*(s + 10) == '1')? -1 : -2;
 	// filler->enemy = (*(s + 10) == '1')? -2 : -1;
@@ -606,41 +606,48 @@ int main(int ac, char ** av)
 	char * str = 0; 
 	int fd = 0;
 	// int fd; 
-	t_filler * filler = init_struct(); 
+	t_filler * filler; 
 	int *my_coord;
-	
+	t_players_id * players_id = (t_players_id*)malloc(sizeof(t_players_id));
 	// if ((fd = open("test.txt", O_RDONLY)) != -1)
 	if (fd == 0)
 	{
 		get_next_line(fd, &str);
-		if (!get_num_players(str, filler))
+		if (!get_num_players(str, players_id))
 			error("reading player num");
-		get_next_line(fd, &str);
-		if (!get_map_dim(str, filler))
-			error("reading map dimensions");
-		get_map(fd, filler);
-		get_next_line(fd, &str);
-		if (!get_token_dim(str, filler))
-			error("reading token dimensions");
-		get_token(fd, filler);
+		while (1)
+		{
+			filler = init_struct(); 
+			get_next_line(fd, &str);
+			if (!get_map_dim(str, filler))
+				error("reading map dimensions");
+			get_map(fd, filler);
+			get_next_line(fd, &str);
+			if (!get_token_dim(str, filler))
+				error("reading token dimensions");
+			get_token(fd, filler);
 
-		filler->token->token_coord = convert_token2coord(filler->token->token_dim->row_max, filler->token->token_dim->column_max, filler->token->char_token);
-		filler->int_map = convert_map_2_int_map(filler->char_map, filler->map_dim, filler->enemy);
-		
-		my_coord = init_arr_coord(filler->map_dim, 2);
-		add_my_initial_coords(&my_coord, filler->int_map, filler->map_dim);
-		
-		// print2d_int_array(filler->int_map, filler->map_dim);
-		// ft_printf("\n\n Token_coord\n");
-		// print_int_arr(filler->token->token_coord, filler->token->token_coord[0]);
-		// ft_printf("\n\n my-coord\n");
-		// print_int_arr(my_coord, my_coord[0]);
+			filler->token->token_coord = convert_token2coord(filler->token->token_dim->row_max, filler->token->token_dim->column_max, filler->token->char_token);
+			filler->int_map = convert_map_2_int_map(filler->char_map, filler->map_dim, players_id->enemy);
+			
+			my_coord = init_arr_coord(filler->map_dim, 2);
+			add_my_initial_coords(&my_coord, filler->int_map, filler->map_dim);
+			
+			// print2d_int_array(filler->int_map, filler->map_dim);
+			// ft_printf("\n\n Token_coord\n");
+			// print_int_arr(filler->token->token_coord, filler->token->token_coord[0]);
+			// ft_printf("\n\n my-coord\n");
+			// print_int_arr(my_coord, my_coord[0]);
 
 
-		put_first_token(filler->int_map, filler->map_dim, filler->token->token_coord, my_coord);
+			put_first_token(filler->int_map, filler->map_dim, filler->token->token_coord, my_coord);
 
 			//print2d_int_array(filler->int_map, filler->map_dim);
-		cleanup(filler);
+			cleanup(filler);
+
+
+		}
+		
 
 		
 	}

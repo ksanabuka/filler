@@ -38,6 +38,13 @@ typedef struct  s_filler
     int **int_map;
 }				t_filler;
 
+typedef struct  s_players_id
+{
+    int me;
+    int enemy;
+}				t_players_id;
+
+
 int *convert_token2coord(int row_max, int column_max, char **s);
 int r_coord_in_list(int r, int c, int * checked_coord_stack); 
 void print_int_arr(int * arr, int len);
