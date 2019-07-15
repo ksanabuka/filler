@@ -219,14 +219,14 @@ int put_token_on_map(int *map_token_coord, int ** map)
     return score + 1;
 }
 
- void put_first_token(int ** map, t_dim *map_dim, int *token_coord, int *my_coord)
+int put_first_token(int ** map, t_dim *map_dim, int *token_coord, int *my_coord)
 {
     int score = 0;
     int * token_map_score = init_arr_coord(map_dim, 5);
     
     int position = tracking_scoring(map, map_dim, token_coord, my_coord, &token_map_score);
     if (position == 0)
-        return ;
+        return 0;
     // ft_printf("token_map_score\n");
     // print_int_arr(token_map_score,token_map_score[0]);
     // ft_printf("\n\n");
@@ -263,6 +263,7 @@ int put_token_on_map(int *map_token_coord, int ** map)
 
     free(token_joint_cell);
     free(map_joint_cell);
+    return score;
 }
 
 
