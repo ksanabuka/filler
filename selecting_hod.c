@@ -260,9 +260,10 @@ int put_first_token(int ** map, t_dim *map_dim, int *token_coord, int *my_coord)
     //print_int_arr(my_coord, my_coord[0]);
 
    // print2d_int_array(map, map_dim);
-
+    free(map_token_coord);
     free(token_joint_cell);
     free(map_joint_cell);
+    free(token_map_score);
     return score;
 }
 

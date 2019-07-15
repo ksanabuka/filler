@@ -28,13 +28,13 @@ void print2d_int_array(int ** arr, t_dim *map_dim)
 	}
 }
 
-int get_num_players(char *s, t_players_id * players_id)
+int get_num_players(char *s, int * me, int * enemy)
 {
 	if ((*(s + 10) != '1') && (*(s + 10) != '2'))
 		return (0); 
 
-	players_id->me = (*(s + 10) == '1')? 'O' : 'X';
-	players_id->enemy = (*(s + 10) == '1')? 'X' : 'O';
+	*me = (*(s + 10) == '1')? 'O' : 'X';
+	*enemy = (*(s + 10) == '1')? 'X' : 'O';
 
 	// filler->me = (*(s + 10) == '1')? -1 : -2;
 	// filler->enemy = (*(s + 10) == '1')? -2 : -1;
@@ -136,12 +136,15 @@ void free2darray(char ** s, int num_rows)
 
 void cleanup(t_filler * filler)
 {
+	free2d_int_array(filler->int_map, filler->map_dim->row_max); 
 	free2darray(filler->char_map, filler->map_dim->row_max);
 	free2darray(filler->token->char_token, filler->token->token_dim->row_max);
 	free(filler->token->token_dim);
+	free(filler->token->token_coord);
 	free(filler->token);
 	free(filler->map_dim);
 	free(filler);
+
 }
 
 t_filler *init_struct(void)
@@ -178,6 +181,20 @@ int ** init_int_map(t_dim* map_dim)
 		i++;
 	}
 	return (int_map);
+}
+
+void free2d_int_array(int ** ar, int num_rows)
+{
+	int i;
+
+	i = 0; 
+	while (i < num_rows)
+	{
+		free(ar[i]);
+		i++;
+	}
+	free(ar);
+	ar = 0; 
 }
 
 void mark_checked(t_coord *newcoord, int *checked_coord_stack)
@@ -547,6 +564,7 @@ int ** convert_map_2_int_map(char **char_map, t_dim *map_dim, int enemy)
 //	print2d_int_array(int_map, map_dim);
 	if (en_coords->row > -1 && en_coords->col > -1)
 		int_map2digs(int_map, en_coords, map_dim);
+	free(en_coords);
 	return (int_map);
 }
 
@@ -559,16 +577,18 @@ int main(int ac, char ** av)
 	av = 0;
 	char * str = 0; 
 	// int fd = 0;
-	int fd; 
+	int fd;
+	int me = 0;
+	int enemy = 0; 
+
 	t_filler * filler; 
 	int *my_coord;
-	t_players_id * players_id = (t_players_id*)malloc(sizeof(t_players_id));
 	int score; 
 	
 	fd = open("test.txt", O_RDONLY); 
 
 	get_next_line(fd, &str);
-	if (!get_num_players(str, players_id))
+	if (!get_num_players(str, &me, &enemy))
 		error("reading player num");
 
 	int i = 0; 
@@ -586,7 +606,7 @@ int main(int ac, char ** av)
 		get_token(fd, filler);
 
 		filler->token->token_coord = convert_token2coord(filler->token->token_dim->row_max, filler->token->token_dim->column_max, filler->token->char_token);
-		filler->int_map = convert_map_2_int_map(filler->char_map, filler->map_dim, players_id->enemy);
+		filler->int_map = convert_map_2_int_map(filler->char_map, filler->map_dim, enemy);
 		
 		my_coord = init_arr_coord(filler->map_dim, 2);
 
@@ -615,7 +635,6 @@ int main(int ac, char ** av)
 	
 		
 	
-//	close(fd);
 	return 0;
 
 
