@@ -551,72 +551,28 @@ int ** convert_map_2_int_map(char **char_map, t_dim *map_dim, int enemy)
 }
 
 
-// int main(int ac, char ** av)
-// {
-// 	ac = 0;
-// 	av = 0;
-// 	char * str = 0; 
-// 	int fd;
-// 	t_filler * filler = init_struct(); 
-// 	int *my_coord;
-	
-// 	if ((fd = open("test.txt", O_RDONLY)) != -1)
-// 	{
-// 		get_next_line(fd, &str);
-// 		if (!get_num_players(str, filler))
-// 			error("reading player num");
-// 			while (1)
-// 			{
-// 				get_next_line(fd, &str);
-// 				if (!get_map_dim(str, filler))
-// 					error("reading map dimensions");
-// 				get_map(fd, filler);
-// 				get_next_line(fd, &str);
-// 				if (!get_token_dim(str, filler))
-// 					error("reading token dimensions");
-// 				get_token(fd, filler);
 
-// 				filler->token->token_coord = convert_token2coord(filler->token->token_dim->row_max, filler->token->token_dim->column_max, filler->token->char_token);
-// 				filler->int_map = convert_map_2_int_map(filler->char_map, filler->map_dim, filler->enemy);
-				
-// 				my_coord = init_arr_coord(filler->map_dim, 2);
-// 				add_my_initial_coords(&my_coord, filler->int_map, filler->map_dim);
-
-// 				put_first_token(filler->int_map, filler->map_dim, filler->token->token_coord, my_coord);
-
-// 				//print2d_int_array(filler->int_map, filler->map_dim);
-// 			}
-// 			cleanup(filler);
-
-		
-// 	}
-// 	close(fd);
-// 	return 0;
-
-
-// }
-
-
-
-
+#include <fcntl.h>
 int main(int ac, char ** av)
 {
 	ac = 0;
 	av = 0;
 	char * str = 0; 
-	int fd = 0;
-	// int fd; 
+	// int fd = 0;
+	int fd; 
 	t_filler * filler; 
 	int *my_coord;
 	t_players_id * players_id = (t_players_id*)malloc(sizeof(t_players_id));
 	int score; 
-	// if ((fd = open("test.txt", O_RDONLY)) != -1)
+	
+	fd = open("test.txt", O_RDONLY); 
+
 	get_next_line(fd, &str);
 	if (!get_num_players(str, players_id))
 		error("reading player num");
 
-
-	while (1)
+	int i = 0; 
+	while (i < 4)
 	{
 		score = 0; 
 		filler = init_struct(); 
@@ -634,25 +590,29 @@ int main(int ac, char ** av)
 		
 		my_coord = init_arr_coord(filler->map_dim, 2);
 
-		add_my_initial_coords(&my_coord, filler->int_map, filler->map_dim);
+		add_my_coords(&my_coord, filler->int_map, filler->map_dim);
 		
-		// print2d_int_array(filler->int_map, filler->map_dim);
-		// ft_printf("\n\n Token_coord\n");
-		// print_int_arr(filler->token->token_coord, filler->token->token_coord[0]);
-		// ft_printf("\n\n my-coord\n");
-		// print_int_arr(my_coord, my_coord[0]);
+		//print2d_int_array(filler->int_map, filler->map_dim);
+		ft_printf("\n\n Token_coord\n");
+		print_int_arr(filler->token->token_coord, filler->token->token_coord[0]);
+		ft_printf("\n\n my-coord\n");
+		print_int_arr(my_coord, my_coord[0]);
 
+		ft_printf("\n\n");
 
 		score = put_first_token(filler->int_map, filler->map_dim, filler->token->token_coord, my_coord);
 		cleanup(filler);
-
+		free(my_coord);
 		if (score == 0)
 			break; 
+
+		// system("leaks obuksha.filler");
+		i++;
 		//print2d_int_array(filler->int_map, filler->map_dim);
 		
 		}
-		
-
+		close(fd);
+	
 		
 	
 //	close(fd);

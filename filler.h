@@ -50,5 +50,5 @@ int r_coord_in_list(int r, int c, int * checked_coord_stack);
 void print_int_arr(int * arr, int len);
 int * init_arr_coord(t_dim *map_dim, int qtycoord);
 int put_first_token(int ** map, t_dim *map_dim, int *token_coord, int *my_coord);
-void add_my_initial_coords(int ** my_coord, int ** map, t_dim *map_dim);
+void add_my_coords(int ** my_coord, int ** map, t_dim *map_dim);
 void print2d_int_array(int ** arr, t_dim *map_dim);

@@ -267,7 +267,7 @@ int put_first_token(int ** map, t_dim *map_dim, int *token_coord, int *my_coord)
 }
 
 
-void add_my_initial_coords(int ** my_coord, int ** map, t_dim *map_dim)
+void add_my_coords(int ** my_coord, int ** map, t_dim *map_dim)
 {
     int i;
 	int j = 0;
