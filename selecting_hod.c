@@ -119,7 +119,10 @@ void add_captured_cells(int * map_token_coord, int *my_coord, int map_joint_row,
 
 int tracking_scoring_for_1_mapcell(int ** map, t_dim *map_dim, t_coord * map_joint_cell,  int *token_coord, int ** token_map_score, int start_index)
 {
-   
+    int start_index_beg = start_index; 
+   if (start_index == 0)
+    start_index = 1; 
+
     int i = 1; 
     int score = 0; 
     t_coord * token_joint_cell = (t_coord *)malloc(sizeof(t_coord));
@@ -144,9 +147,20 @@ int tracking_scoring_for_1_mapcell(int ** map, t_dim *map_dim, t_coord * map_joi
 
       
    }
-  
+
+//    int a = 0;
+// 	while (a < (*token_map_score)[0])
+// 	{
+//         if ((*token_map_score)[a] == -2147483648 && (*token_map_score)[a + 1] == -2147483648)
+//           break;
+// 		ft_printf("%d\t",(*token_map_score)[a++]);
+// 	}
+//   ft_printf("\n\n");
    free(token_joint_cell);
-   return (start_index == 1) ? 0 : start_index;
+
+   if (start_index_beg == start_index)
+        return 0; 
+   return (start_index == 1) ? 0 : start_index - start_index_beg;
 }
 
 int find_best_score_position(int * token_map_score)
@@ -178,7 +192,7 @@ int find_best_score_position(int * token_map_score)
 
 int tracking_scoring(int ** map, t_dim *map_dim, int *token_coord, int *my_coord, int ** token_map_score)
 {
-    int start_index = 1;
+    int start_index = 0;
     int j = 1;
     
     // ft_printf("my_coord\n");
@@ -186,9 +200,9 @@ int tracking_scoring(int ** map, t_dim *map_dim, int *token_coord, int *my_coord
     //   ft_printf("\n\n");
 
 
-// ft_printf("token_coord\n");
-//     print_int_arr(token_coord, token_coord[0]);
-//       ft_printf("\n\n");
+    // ft_printf("token_coord\n");
+    // print_int_arr(token_coord, token_coord[0]);
+    //   ft_printf("\n\n");
 
     t_coord * map_joint_cell = (t_coord *)malloc(sizeof(t_coord));
    
@@ -200,7 +214,12 @@ int tracking_scoring(int ** map, t_dim *map_dim, int *token_coord, int *my_coord
         j = j + 2; 
     }
     free(map_joint_cell);
-   return find_best_score_position(*token_map_score);
+    // ft_printf("\n\n token_map_score\n");
+	// print_int_arr(*token_map_score, (*token_map_score)[0]);
+    // ft_printf("%d\n\n");
+    int best_position = find_best_score_position(*token_map_score);
+    // ft_printf("%d\n best position %d", best_position);
+   return best_position;
 
 }
 

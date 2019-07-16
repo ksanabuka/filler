@@ -14,7 +14,12 @@ void print_int_arr(int * arr, int len)
 {
 	int a = 0;
 	while (a < len)
+	{
+		if (arr[a] == -2147483648)
+			break; 
 		ft_printf("%d\t", arr[a++]);
+	}
+	ft_printf("\n\n");
 }
 
 void print2d_int_array(int ** arr, t_dim *map_dim)
@@ -24,7 +29,6 @@ void print2d_int_array(int ** arr, t_dim *map_dim)
 	while (i < map_dim->row_max)
 	{
 		print_int_arr(arr[i++], map_dim->column_max);
-		ft_printf("printing map...\n");
 	}
 }
 
@@ -585,14 +589,15 @@ int main(int ac, char ** av)
 	int *my_coord;
 	int score; 
 	
-	fd = open("test.txt", O_RDONLY); 
-
+	// fd = open("test.txt", O_RDONLY); 
+		fd = 0; 
 	get_next_line(fd, &str);
 	if (!get_num_players(str, &me, &enemy))
 		error("reading player num");
 
-	int i = 0; 
-	while (i < 4)
+	// int i = 0; 
+	// while (i < 1)
+	while (1)
 	{
 		score = 0; 
 		filler = init_struct(); 
@@ -612,26 +617,26 @@ int main(int ac, char ** av)
 
 		add_my_coords(&my_coord, filler->int_map, filler->map_dim);
 		
-		//print2d_int_array(filler->int_map, filler->map_dim);
-		ft_printf("\n\n Token_coord\n");
-		print_int_arr(filler->token->token_coord, filler->token->token_coord[0]);
-		ft_printf("\n\n my-coord\n");
-		print_int_arr(my_coord, my_coord[0]);
-
-		ft_printf("\n\n");
+		// print2d_int_array(filler->int_map, filler->map_dim);
+		// ft_printf("\n\n Token_coord\n");
+		// print_int_arr(filler->token->token_coord, filler->token->token_coord[0]);
+		// ft_printf("\n\n my-coord\n");
+		// print_int_arr(my_coord, my_coord[0]);
+		// ft_printf("\n\n");
 
 		score = put_first_token(filler->int_map, filler->map_dim, filler->token->token_coord, my_coord);
+		// print2d_int_array(filler->int_map, filler->map_dim);
+
 		cleanup(filler);
 		free(my_coord);
 		if (score == 0)
 			break; 
 
 		// system("leaks obuksha.filler");
-		i++;
-		//print2d_int_array(filler->int_map, filler->map_dim);
+		// i++;
 		
 		}
-		close(fd);
+		// close(fd);
 	
 		
 	
