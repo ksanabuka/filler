@@ -56,11 +56,15 @@ int get_map_dim(char *s, t_filler * filler)
 	if ((s_len < 12) || ((*(s + 8) <= '0') && (*(s + 8) > '9')))
 		return (0); 
 	filler->map_dim->row_max = ft_atoi(s + 8);
-	if (filler->map_dim->row_max >= 2147483647 || filler->map_dim->row_max <= 0)
-		return 0; 
 	tmp = ft_itoa(filler->map_dim->row_max);
+
+	if (!tmp || filler->map_dim->row_max >= 2147483647 || filler->map_dim->row_max <= 0)
+		return 0; 
+	
+	
 	len = ft_strlen(tmp);
 	free(tmp);
+	
 	
 	if ((8 + 2 + len > s_len) || ((*(s + 8 + 1 + len) <= '0') &&  (*(s + 8 + 1 + len) > '9')))
 		return (0); 
