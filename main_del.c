@@ -631,7 +631,7 @@ int main(int ac, char ** av)
 		score = 0; 
 		filler = init_struct(); 
 		get_next_line(fd, &str);
-		// ft_printf("%\nstring1: %s\n\n", str);
+		ft_printf("%\nstring1: %s\n\n", str);
 		
 		if (!get_map_dim(str, filler))
 		{	
@@ -641,7 +641,7 @@ int main(int ac, char ** av)
 		free(str);
 		get_map(fd, filler);
 		get_next_line(fd, &str);
-		// ft_printf("%\nstring2: %s\n\n", str);
+		ft_printf("%\nstring2: %s\n\n", str);
 		if (!get_token_dim(str, filler))
 		{
 			free(str);
@@ -670,7 +670,7 @@ int main(int ac, char ** av)
 
 		cleanup(filler);
 		free(my_coord);
-		
+				// system("leaks obuksha.filler");
 
 		if (score == 0)
 			break; 
@@ -680,7 +680,6 @@ int main(int ac, char ** av)
 		// i++;
 		
 		}
-		// system("leaks obuksha.filler");
 		// close(fd);
 	
 		

@@ -194,6 +194,9 @@ int tracking_scoring(int ** map, t_dim *map_dim, int *token_coord, int *my_coord
 {
     int start_index = 0;
     int j = 1;
+
+    //debugging
+
     
     // ft_printf("my_coord\n");
     // print_int_arr(my_coord, my_coord[0]);
@@ -214,11 +217,11 @@ int tracking_scoring(int ** map, t_dim *map_dim, int *token_coord, int *my_coord
         j = j + 2; 
     }
     free(map_joint_cell);
+    int best_position = find_best_score_position(*token_map_score);
     // ft_printf("\n\n token_map_score\n");
 	// print_int_arr(*token_map_score, (*token_map_score)[0]);
     // ft_printf("%d\n\n");
-    int best_position = find_best_score_position(*token_map_score);
-    // ft_printf("%d\n best position %d", best_position);
+    // ft_printf("best position: %d\n", best_position);
    return best_position;
 
 }
@@ -265,7 +268,7 @@ int put_first_token(int ** map, t_dim *map_dim, int *token_coord, int *my_coord)
 
 
    int * map_token_coord = create_map_token_coord(token_joint_cell, map_joint_cell, token_coord, map_dim);
-   
+   //debugging
 //    ft_printf("map_token_coord\n");
 //     print_int_arr(map_token_coord,map_token_coord[0]);
 //     ft_printf("\n\n");
