@@ -79,8 +79,8 @@ int give_score_for_token(int ** map, t_dim *map_dim, t_coord * token_joint_cell,
     int score = 0; 
     int * map_token_coord = create_map_token_coord(token_joint_cell, map_joint_cell,  token_coord, map_dim);
 
-    // ft_printf("map_token_coord\n");
-   // print_int_arr(map_token_coord, map_token_coord[0]);
+    ft_printf("map_token_coord\n");
+   print_int_arr(map_token_coord, map_token_coord[0]);
 
     if (can_put_on_map(map_token_coord, map, map_joint_cell, map_dim))
     {
@@ -269,14 +269,14 @@ int put_first_token(int ** map, t_dim *map_dim, int *token_coord, int *my_coord)
 
    int * map_token_coord = create_map_token_coord(token_joint_cell, map_joint_cell, token_coord, map_dim);
    //debugging
-//    ft_printf("map_token_coord\n");
-//     print_int_arr(map_token_coord,map_token_coord[0]);
-//     ft_printf("\n\n");
+   ft_printf("map_token_coord\n");
+    print_int_arr(map_token_coord,map_token_coord[0]);
+    ft_printf("\n\n");
 
     score = put_token_on_map(map_token_coord, map);
-    ft_putnbr_fd(map_token_coord[1], 1);
+    ft_putnbr_fd(map_token_coord[1] - token_joint_cell->row, 1);
     write(1, " ", 1);
-    ft_putnbr_fd(map_token_coord[2], 1);
+    ft_putnbr_fd(map_token_coord[2] - token_joint_cell->col, 1);
     write(1, "\n", 1);
     add_captured_cells(map_token_coord, my_coord, map_joint_cell->row, map_joint_cell->col);
     //print_int_arr(my_coord, my_coord[0]);

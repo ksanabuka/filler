@@ -32,46 +32,91 @@ void print2d_int_array(int ** arr, t_dim *map_dim)
 	}
 }
 
-int get_num_players(char *s, int * me, int * enemy)
+int get_num_players(int fd, int * me, int * enemy)
 {
-	if ((*(s + 10) != '1') && (*(s + 10) != '2'))
-		return (0); 
+	char * str = 0; 
 
-	*me = (*(s + 10) == '1')? 'O' : 'X';
-	*enemy = (*(s + 10) == '1')? 'X' : 'O';
+	while (1)
+	{
+		get_next_line(fd, &str);
+		if (!str)
+			return 0;
+		if (ft_strnstr(str, "$$$ exec p", 10))
+		{
 
-	// filler->me = (*(s + 10) == '1')? -1 : -2;
-	// filler->enemy = (*(s + 10) == '1')? -2 : -1;
-	return (1);
+			if ((*(str + 10) != '1') && (*(str + 10) != '2'))
+			{
+				return (0); 
+			}
+			*me = (*(str + 10) == '1' && str[23] == 'o')? 'O' : 'X';
+			*enemy = (*(str + 10) == '1' && str[23] == 'o')? 'X' : 'O';
+			ft_strdel(&str);
+			return 1;
+		}
+	}
+	return (0);
 }
 
-int get_map_dim(char *s, t_filler * filler)
+int get_map_dim(int fd, t_filler * filler)
 {
-	if (!s)
-		return 0; 
+	char * str = 0;
 	int len;
 	char * tmp;
-	int s_len = ft_strlen(s); 
-	
-	if ((s_len < 12) || ((*(s + 8) <= '0') && (*(s + 8) > '9')))
-		return (0); 
-	filler->map_dim->row_max = ft_atoi(s + 8);
-	tmp = ft_itoa(filler->map_dim->row_max);
+	int s_len;
 
-	if (!tmp || filler->map_dim->row_max >= 2147483647 || filler->map_dim->row_max <= 0)
-		return 0; 
-	
-	
-	len = ft_strlen(tmp);
-	free(tmp);
-	
-	
-	if ((8 + 2 + len > s_len) || ((*(s + 8 + 1 + len) <= '0') &&  (*(s + 8 + 1 + len) > '9')))
-		return (0); 
-	filler->map_dim->column_max = ft_atoi(s + 8 + 1 + len);
-	if (filler->map_dim->column_max >= 2147483647 || filler->map_dim->column_max <= 0)
-		return 0; 
-	return (1);
+	while (1)
+	{
+		get_next_line(fd, &str);
+		if (!str)
+		{
+			error("-100 no string reading map dimensions");
+			return 0;
+			}
+
+		s_len = ft_strlen(str);
+		if (!s_len)
+			{
+			ft_strdel(&str);
+			error("0reading map dimensions");
+			return 0;
+			} 
+		if (ft_strnstr(str, "Plateau ", 8))
+		{
+			if ((s_len < 12) || ((*(str + 8) <= '0') && (*(str + 8) > '9')))
+			{
+				ft_strdel(&str);
+			error("2reading map dimensions");
+			return 0;
+			} 
+			filler->map_dim->row_max = ft_atoi(str + 8);
+			tmp = ft_itoa(filler->map_dim->row_max);
+			if (!tmp || filler->map_dim->row_max >= 2147483647 || filler->map_dim->row_max <= 0)
+			{
+				ft_strdel(&str);
+				error("3reading map dimensions");
+				return 0;
+			} 
+			len = ft_strlen(tmp);
+			ft_strdel(&tmp);
+			if ((8 + 2 + len > s_len) || ((*(str + 8 + 1 + len) <= '0') &&  (*(str + 8 + 1 + len) > '9')))
+			{
+				ft_strdel(&str);
+				error("4reading map dimensions");
+				return 0;
+			} 
+			filler->map_dim->column_max = ft_atoi(str + 8 + 1 + len);
+			if (filler->map_dim->column_max >= 2147483647 || filler->map_dim->column_max <= 0)
+			{
+				ft_strdel(&str);
+				error("1reading map dimensions");
+				return 0;
+			}
+			ft_strdel(&str);
+			return 1;
+		}
+		ft_strdel(&str);
+	}
+	return 0; 
 }
 
 int get_token_dim(char *s, t_filler * filler)
@@ -125,13 +170,13 @@ void get_map(int fd, t_filler * filler)
 	int i = 0;
 	char *str;
 	get_next_line(fd, &str);
-	free(str);
+	ft_strdel(&str);
 	while (i < filler->map_dim->row_max)
 	{
 		get_next_line(fd, &str);
 		filler->char_map[i] = ft_strcpy(filler->char_map[i], str + 4);
 		i++;
-		free(str);
+		ft_strdel(&str);
 	}
 	
 //	print_2d_map(filler->char_map, filler->map_dim->row_max);
@@ -148,7 +193,7 @@ void get_token(int fd, t_filler * filler)
 		get_next_line(fd, &str);
 		filler->token->char_token[i] = ft_strcpy(filler->token->char_token[i], str);
 		i++;
-		free(str);
+		ft_strdel(&str);
 	}
 	
 //	print_2d_map(filler->token->char_token, filler->token->token_dim->row_max);
@@ -591,6 +636,7 @@ int ** convert_map_2_int_map(char **char_map, t_dim *map_dim, int enemy)
 			}
 			else 
 				int_map[row][col] = 0;
+
 			col++;
 		}
 		row++;
@@ -620,39 +666,38 @@ int main(int ac, char ** av)
 	
 	// fd = open("test.txt", O_RDONLY); 
 	fd = 0; 
-	get_next_line(fd, &str);
-
-	if (!get_num_players(str, &me, &enemy))
+	if (!get_num_players(fd, &me, &enemy))
 	{
-		free(str);
 		error("reading player num");
 	}
-	free(str);
+
 	// int i = 0; 
+	int qty; 
 	// while (i < 4)
 	while (1)
 	{
 		score = 0; 
 		filler = init_struct(); 
-		get_next_line(fd, &str);
+
+
 		// ft_printf("%\nstring1: %s\n\n", str);
+			
+			if (!get_map_dim(fd, filler))
+			{	
+				error("general_reading map dimensions");
+			}
+			get_map(fd, filler);
+		qty = 	get_next_line(fd, &str);
+			// ft_printf("%\nstring2: %s\n\n", str);
+			if (!get_token_dim(str, filler))
+			{
+				ft_strdel(&str);
+				error("reading token dimensions");
+			}
+			ft_strdel(&str);
+			get_token(fd, filler);
 		
-		if (!get_map_dim(str, filler))
-		{	
-			free(str);
-			error("reading map dimensions");
-		}
-		free(str);
-		get_map(fd, filler);
-		get_next_line(fd, &str);
-		// ft_printf("%\nstring2: %s\n\n", str);
-		if (!get_token_dim(str, filler))
-		{
-			free(str);
-			error("reading token dimensions");
-		}
-		free(str);
-		get_token(fd, filler);
+		
 
 		filler->token->token_coord = convert_token2coord(filler->token->token_dim->row_max, filler->token->token_dim->column_max, filler->token->char_token);
 		filler->int_map = convert_map_2_int_map(filler->char_map, filler->map_dim, enemy);
@@ -663,8 +708,9 @@ int main(int ac, char ** av)
 		
 		//debugging
 		// print2d_int_array(filler->int_map, filler->map_dim);
-		// ft_printf("\n\n Token_coord\n");
-		// print_int_arr(filler->token->token_coord, filler->token->token_coord[0]);
+		ft_printf("\n\n !!!Token_coord\n");
+		print_int_arr(filler->token->token_coord, filler->token->token_coord[0]);
+		ft_printf("\n\n");
 		// ft_printf("\n\n my-coord\n");
 		// print_int_arr(my_coord, my_coord[0]);
 		// ft_printf("\n\n");
