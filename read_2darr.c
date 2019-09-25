@@ -56,9 +56,9 @@ struct arr2d read_arr2d(int fd, const char *dims_prefix, int is_map) {
 }
 
 struct arr2d read_map(int fd) {
-    return read_arr2d(fd, "Plateau ", 1);
+    return read_arr2d(fd, "Plateau ", 1 /* is_map */);
 }
 
 struct arr2d read_piece(int fd) {
-    return read_arr2d(fd, "Piece ", 0);
+    return read_arr2d(fd, "Piece ", 0 /* is_map */);
 }

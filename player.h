@@ -14,11 +14,11 @@ enum map_filler {
     player2_filler = 'x'
 };
 
-struct player {
+typedef struct player {
     enum map_filler filler;
-};
+} t_player;
 
-enum map_filler enemy_filler(const struct player* p);
+enum map_filler enemy_filler(struct player p);
 struct player read_player(int fd);
 
 #endif /* player_h */
