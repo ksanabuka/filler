@@ -40,7 +40,7 @@ int main(int argc, const char * argv[])
 		arr2d_dispose(piece);
 		arr2d_dispose(map);
 	}
-	return 0;
+	return (0);
 }
 void write_option(t_point p, int fd)
 {

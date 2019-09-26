@@ -61,7 +61,7 @@ t_arr2d read_arr2d(int fd, const char *dims_prefix, int is_map)
 	cols = str_to_i(dims_ptr);
 	res = create_arr2d(rows, cols);
 	read_arr_lines(fd, res, buf, is_map);
-	return res;
+	return (res);
 }
 t_arr2d read_map(int fd) {
 	return read_arr2d(fd, "Plateau ", 1);

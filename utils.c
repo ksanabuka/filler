@@ -22,7 +22,7 @@ void read_line(int fd, char *buf) {
 	{
 		count = read(fd, &c, 1);
 		if (count != 1 || c == '\n') {
-			break;
+			break ;
 		}
 		*buf = c;
 		++buf;
@@ -32,12 +32,12 @@ void read_line(int fd, char *buf) {
 int str_starts_with(const char *str, const char *with) {
 	while (*with) {
 		if (*str != *with) {
-			return 0;
+			return (0);
 		}
 		++str;
 		++with;
 	}
-	return 1;
+	return (1);
 }
 int str_len(const char *str) {
 	int res;
@@ -45,7 +45,7 @@ int str_len(const char *str) {
 	while (str[res]) {
 		++res;
 	}
-	return res;
+	return (res);
 }
 int str_to_i(const char *str) {
 	int res;
@@ -54,7 +54,7 @@ int str_to_i(const char *str) {
 		res = 10 * res + *str - '0';
 		++str;
 	}
-	return res;
+	return (res);
 }
 void i_to_str(int n, char *str)
 {
@@ -88,7 +88,7 @@ const char *str_chr(const char *str, char c) {
 		}
 		++str;
 	}
-	return 0;
+	return (0);
 }
 void str_reverse(char *str)
 {

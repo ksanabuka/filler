@@ -20,5 +20,5 @@ t_player read_player(int fd) {
 	char buf[300];
 	read_line(fd, buf);
 	res.filler = buf[10] == '1' ? player1_filler : player2_filler;
-	return res;
+	return (res);
 }
