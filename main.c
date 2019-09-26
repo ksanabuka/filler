@@ -37,8 +37,8 @@ int main(int argc, const char * argv[])
 		t_arr2d piece = read_piece(in_fd);
 		t_point p = evaluate_best_move(map, piece, me);
 		write_option(p, 1);
-		arr2dDispose(piece);
-		arr2dDispose(map);
+		arr2d_dispose(piece);
+		arr2d_dispose(map);
 	}
 	return 0;
 }

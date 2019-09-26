@@ -14,27 +14,27 @@
 #include "arr2d.h"
 #include "utils.h"
 
-static int idx(struct arr2d arr, int r, int c)
+static int idx(t_arr2d arr, int r, int c)
 {
 	return r * arr.num_cols + c;
 }
-struct arr2d createArr2d(int rows, int cols)
+t_arr2d create_arr2d(int rows, int cols)
 {
-	struct arr2d res;
+	t_arr2d res;
 	res.num_cols = cols;
 	res.num_rows = rows;
 	res.arr = malloc(rows * cols * sizeof(int));
 	return res;
 }
-void arr2dDispose(struct arr2d arr)
+void arr2d_dispose(t_arr2d arr)
 {
 	free(arr.arr);
 }
-int arr2dGetItemAt(struct arr2d arr, int r, int c)
+int arr2d_get_item_at(t_arr2d arr, int r, int c)
 {
 	return arr.arr[idx(arr, r, c)];
 }
-void arr2dSetItemAt(struct arr2d arr, int val, int r, int c)
+void arr2d_set_item_at(t_arr2d arr, int val, int r, int c)
 {
 	arr.arr[idx(arr, r, c)] = val;
 }

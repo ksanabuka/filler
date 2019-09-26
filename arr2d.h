@@ -13,17 +13,17 @@
 #ifndef ARR2D_H
 # define ARR2D_H
 
-typedef struct		arr2d
+typedef struct		s_arr2d
 {
 	int	num_cols;
 	int	num_rows;
 	int	*arr;
 }					t_arr2d;
 
-struct arr2d		createArr2d(int rows, int cols);
-void				arr2dDispose(struct arr2d arr);
-int					arr2dGetItemAt(struct arr2d arr, int r, int c);
-void				arr2dSetItemAt(struct arr2d arr, int val, int r, int c);
+t_arr2d				create_arr2d(int rows, int cols);
+void				arr2d_dispose(t_arr2d arr);
+int					arr2d_get_item_at(t_arr2d arr, int r, int c);
+void				arr2d_set_item_at(t_arr2d arr, int val, int r, int c);
 
 
 #endif

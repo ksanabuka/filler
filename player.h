@@ -13,12 +13,12 @@
 #ifndef PLAYER_H
 # define PLAYER_H
 
-enum map_filler 
+enum	map_filler
 {
 	player1_filler = 'o',
 	player2_filler = 'x'
 };
-typedef struct player 
+typedef struct player
 {
 	enum map_filler filler;
 } t_player;

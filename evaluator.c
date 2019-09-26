@@ -24,7 +24,7 @@ int check_enemy_in_row(t_point start, int num_cols, t_arr2d map, enum map_filler
 	i = 0;
 	while (i < num_cols)
 	{
-		if (is_point_in_segment(start.row, 0, map.num_rows) && is_point_in_segment(start.col + i, 0, map.num_cols) && arr2dGetItemAt(map, start.row, start.col + i) == enemy)
+		if (is_point_in_segment(start.row, 0, map.num_rows) && is_point_in_segment(start.col + i, 0, map.num_cols) && arr2d_get_item_at(map, start.row, start.col + i) == enemy)
 			return 1;
 		++i;
 	}
@@ -36,7 +36,7 @@ int check_enemy_in_col(t_point start, int num_rows, t_arr2d map, enum map_filler
 	i = 0;
 	while (i < num_rows)
 	{
-		if (is_point_in_segment(start.row + i, 0, map.num_rows) && is_point_in_segment(start.col, 0, map.num_cols) && arr2dGetItemAt(map, start.row + i, start.col) == enemy)
+		if (is_point_in_segment(start.row + i, 0, map.num_rows) && is_point_in_segment(start.col, 0, map.num_cols) && arr2d_get_item_at(map, start.row + i, start.col) == enemy)
 			return 1;
 		++i;
 	}
@@ -73,7 +73,7 @@ int get_num_players_in_row(int row, t_arr2d map, enum map_filler filler)
 	c = 0;
 	while (c < map.num_cols)
 	{
-		if (arr2dGetItemAt(map, row, c) == filler)
+		if (arr2d_get_item_at(map, row, c) == filler)
 			++res;
 		++c;
 	}
@@ -88,7 +88,7 @@ int get_num_players_in_col(int col, t_arr2d map, enum map_filler filler)
 	r = 0;
 	while (r < map.num_rows)
 	{
-		if (arr2dGetItemAt(map, r, col) == filler)
+		if (arr2d_get_item_at(map, r, col) == filler)
 			++res;
 		++r;
 	}
@@ -110,15 +110,15 @@ int evaluate_score(t_point p, t_arr2d map, t_arr2d piece, t_player me)
 		c = 0;
 		while (c < piece.num_cols)
 		{
-			if (arr2dGetItemAt(piece, r, c) == '*')
+			if (arr2d_get_item_at(piece, r, c) == '*')
 			{
 				p_map = make_point(p.row + r, p.col + c);
 				if (is_point_in_segment(p_map.row, 0, map.num_rows) && \
 				 is_point_in_segment(p_map.col, 0, map.num_cols) && \
-				 (arr2dGetItemAt(map, p_map.row, p_map.col) == '.' || \
-				 arr2dGetItemAt(map, p_map.row, p_map.col) == me.filler))
+				 (arr2d_get_item_at(map, p_map.row, p_map.col) == '.' || \
+				 arr2d_get_item_at(map, p_map.row, p_map.col) == me.filler))
 				{
-					if (arr2dGetItemAt(map, p_map.row, p_map.col) == me.filler)
+					if (arr2d_get_item_at(map, p_map.row, p_map.col) == me.filler)
 					{
 						++num_overlaps;
 					}

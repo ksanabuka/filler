@@ -16,7 +16,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
-static void read_arr_lines(int fd, struct arr2d arr, char *buf, int is_map) {
+static void read_arr_lines(int fd, t_arr2d arr, char *buf, int is_map) {
 	int r;
 	int c;
 	char map_char;
@@ -36,15 +36,15 @@ static void read_arr_lines(int fd, struct arr2d arr, char *buf, int is_map) {
 			{
 				map_char = map_char - 'A' + 'a';
 			}
-			arr2dSetItemAt(arr, map_char, r, c);
+			arr2d_set_item_at(arr, map_char, r, c);
 			++c;
 		}
 		++r;
 	}
 }
-struct arr2d read_arr2d(int fd, const char *dims_prefix, int is_map)
+t_arr2d read_arr2d(int fd, const char *dims_prefix, int is_map)
 {
-	struct arr2d res;
+	t_arr2d res;
 	char buf[1024];
 	const char *dims_ptr;
 	int rows;
@@ -59,13 +59,13 @@ struct arr2d read_arr2d(int fd, const char *dims_prefix, int is_map)
 	rows = str_to_i(dims_ptr);
 	dims_ptr = str_chr(dims_ptr, ' ') + 1;
 	cols = str_to_i(dims_ptr);
-	res = createArr2d(rows, cols);
+	res = create_arr2d(rows, cols);
 	read_arr_lines(fd, res, buf, is_map);
 	return res;
 }
-struct arr2d read_map(int fd) {
+t_arr2d read_map(int fd) {
 	return read_arr2d(fd, "Plateau ", 1);
 }
-struct arr2d read_piece(int fd) {
+t_arr2d read_piece(int fd) {
 	return read_arr2d(fd, "Piece ", 0);
 }

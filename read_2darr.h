@@ -14,7 +14,7 @@
 # define READ_2DARR_H
 # include "arr2d.h"
 
-struct arr2d read_map(int fd);
-struct arr2d read_piece(int fd);
+t_arr2d read_map(int fd);
+t_arr2d read_piece(int fd);
 
 #endif
