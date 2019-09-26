@@ -13,11 +13,11 @@
 #ifndef POINT_H
 # define POINT_H
 
-typedef struct s_point 
+typedef struct	s_point
 {
 	int row;
 	int col;
-} t_point;
-t_point make_point(int row, int col);
+}				t_point;
+t_point			make_point(int row, int col);
 
 #endif

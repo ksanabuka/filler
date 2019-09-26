@@ -18,7 +18,7 @@ int check_radius_not_too_big(int r, t_point p, t_arr2d map)
 	int a = 2 * r + 1;
 	return segments_intersect(top, a, 0, map.num_rows) && segments_intersect(left, a, 0, map.num_cols);
 }
-int check_enemy_in_row(t_point start, int num_cols, t_arr2d map, enum map_filler enemy)
+int check_enemy_in_row(t_point start, int num_cols, t_arr2d map, enum e_map_filler enemy)
 {
 	int i;
 	i = 0;
@@ -30,7 +30,7 @@ int check_enemy_in_row(t_point start, int num_cols, t_arr2d map, enum map_filler
 	}
 	return 0;
 }
-int check_enemy_in_col(t_point start, int num_rows, t_arr2d map, enum map_filler enemy)
+int check_enemy_in_col(t_point start, int num_rows, t_arr2d map, enum e_map_filler enemy)
 {
 	int i;
 	i = 0;
@@ -45,7 +45,7 @@ int check_enemy_in_col(t_point start, int num_rows, t_arr2d map, enum map_filler
 int get_enemy_distance(t_arr2d map, t_point p, t_player me)
 {
 	int r;
-	enum map_filler enemy;
+	enum e_map_filler enemy;
 	enemy = enemy_filler(me);
 	r = 1;
 	while (check_radius_not_too_big(r, p, map))
@@ -64,7 +64,7 @@ int get_enemy_distance(t_arr2d map, t_point p, t_player me)
 	}
 	return r;
 }
-int get_num_players_in_row(int row, t_arr2d map, enum map_filler filler)
+int get_num_players_in_row(int row, t_arr2d map, enum e_map_filler filler)
 {
 	int res;
 	int c;
@@ -79,7 +79,7 @@ int get_num_players_in_row(int row, t_arr2d map, enum map_filler filler)
 	}
 	return res;
 }
-int get_num_players_in_col(int col, t_arr2d map, enum map_filler filler)
+int get_num_players_in_col(int col, t_arr2d map, enum e_map_filler filler)
 {
 	int res;
 	int r;
