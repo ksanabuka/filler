@@ -1,6 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: obuksha <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/09/26 12:19:58 by obuksha           #+#    #+#             */
+/*   Updated: 2019/09/26 12:20:01 by obuksha          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#ifndef utils_h
-#define utils_h
+#ifndef UTILS_H
+# define UTILS_H
 
 void read_line(int fd, char *buf);
 int str_starts_with(const char *str, const char *with);
