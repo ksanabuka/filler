@@ -1,10 +1,3 @@
-//
-//  utils.c
-//  filler2
-//
-//  Created by Oksana Buksha on 7/21/19.
-//  Copyright © 2019 Oksana Buksha. All rights reserved.
-//
 
 #include "utils.h"
 #include <unistd.h>
@@ -15,7 +8,8 @@ void read_line(int fd, char *buf) {
     char c;
     ssize_t count;
     
-    while (1) {
+    while (1) 
+    {
         count = read(fd, &c, 1);
         if (count != 1 || c == '\n') {
             break;

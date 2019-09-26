@@ -1,10 +1,3 @@
-//
-//  arr2d.c
-//  filler2
-//
-//  Created by Oksana Buksha on 7/21/19.
-//  Copyright © 2019 Oksana Buksha. All rights reserved.
-//
 
 #include <stdlib.h>
 #include "arr2d.h"

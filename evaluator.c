@@ -1,10 +1,3 @@
-//
-//  evaluator.c
-//  filler2
-//
-//  Created by Oksana Buksha on 9/12/19.
-//  Copyright © 2019 Oksana Buksha. All rights reserved.
-//
 
 #include "evaluator.h"
 #include "utils.h"
@@ -115,13 +108,20 @@ int evaluate_score(t_point p, t_arr2d map, t_arr2d piece, t_player me)
         while (c < piece.num_cols)
         {
             if (arr2dGetItemAt(piece, r, c) == '*')
-            {
+            { 
                 p_map = make_point(p.row + r, p.col + c);
-                if (is_point_in_segment(p_map.row, 0, map.num_rows) && is_point_in_segment(p_map.col, 0, map.num_cols) && (arr2dGetItemAt(map, p_map.row, p_map.col) == '.' || arr2dGetItemAt(map, p_map.row, p_map.col) == me.filler))
+
+                if (is_point_in_segment(p_map.row, 0, map.num_rows) && \
+                 is_point_in_segment(p_map.col, 0, map.num_cols) && \
+                 (arr2dGetItemAt(map, p_map.row, p_map.col) == '.' || \
+                 arr2dGetItemAt(map, p_map.row, p_map.col) == me.filler))
                 {
-                    if (arr2dGetItemAt(map, p_map.row, p_map.col) == me.filler) {
+                    if (arr2dGetItemAt(map, p_map.row, p_map.col) == me.filler) 
+                    {
                         ++num_overlaps;
-                    } else {
+                    } 
+                    else 
+                    {
                         int ed = get_enemy_distance(map, p_map, me);
                         int k = 2;
                         int rows_score = k * map.num_cols - k * get_num_players_in_row(p_map.row, map, enemy_filler(me)) - get_num_players_in_row(p_map.row, map, me.filler);

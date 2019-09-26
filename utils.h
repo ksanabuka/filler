@@ -1,10 +1,3 @@
-//
-//  utils.h
-//  filler2
-//
-//  Created by Oksana Buksha on 7/21/19.
-//  Copyright © 2019 Oksana Buksha. All rights reserved.
-//
 
 #ifndef utils_h
 #define utils_h
@@ -22,4 +15,4 @@ int is_point_in_segment(int x, int seg_x, int seg_length);
 int segments_intersect(int seg_x1, int seg_length1, int seg_x2, int seg_length2);
 int i_abs(int n);
 
-#endif /* utils_h */
+#endif

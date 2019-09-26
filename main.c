@@ -1,16 +1,3 @@
-//
-//  main.c
-//  filler2
-//
-//  Created by Oksana Buksha on 7/21/19.
-//  Copyright © 2019 Oksana Buksha. All rights reserved.
-//
-// gcc -Wall -Werror -Wextra -g -fsanitize=address ./inc/gnl/get_next_line.c main.c solver.c selecting_hod.c -L ./inc/gnl/libft -lft -L ./inc/ft_printf -lftprintf -I ./inc/ft_printf/parser.h   -I./inc/gnl -I./inc/gnl/libft -o obuksha.filler
-//./filler_vm -f maps/map00 -p1 players/abanlin.filler -p2 players/champely.filler -sjk
-// gcc -Wall -Werror -Wextra -g -o obuksha.filler *.c
-
-//./filler_vm -f maps/map00 -p2 players/abanlin.filler -p1 ../obuksha.filler  | less
-// gcc -Wall -Werror -Wextra -g -o obuksha.filler *.c
 
 #include "arr2d.h"
 #include "player.h"
@@ -22,7 +9,6 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <fcntl.h>
 
 void write_option(t_point p, int fd);
 
@@ -31,11 +17,9 @@ int main(int argc, const char * argv[])
     argc = 0;
     argv = 0; 
     t_player me;
-   int in_fd = 0;
+  int in_fd = 0;
     
-    // int in_fd;
-    // in_fd = open("test.txt", O_RDONLY);
-
+    
     me = read_player(in_fd);
     
     while (1) 
@@ -47,7 +31,6 @@ int main(int argc, const char * argv[])
         arr2dDispose(piece);
         arr2dDispose(map);
     }
-    // close(in_fd);
     return 0;
 }
 

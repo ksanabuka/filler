@@ -1,10 +1,3 @@
-//
-//  point.c
-//  filler2
-//
-//  Created by Oksana Buksha on 9/12/19.
-//  Copyright © 2019 Oksana Buksha. All rights reserved.
-//
 
 #include "point.h"
 
