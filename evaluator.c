@@ -134,7 +134,7 @@ static int	calculate_score(t_arr2d map, t_point p_map, t_player me)
 	return (m1 < ed ? m1 : ed);
 }
 
-static int check_point(t_point p_map, t_arr2d map, t_player me)
+static int	check_point(t_point p_map, t_arr2d map, t_player me)
 {
 	if (is_point_in_segment(p_map.row, 0, map.num_rows) && \
 		is_point_in_segment(p_map.col, 0, map.num_cols) && \
@@ -147,11 +147,11 @@ static int check_point(t_point p_map, t_arr2d map, t_player me)
 
 int	evaluate_score(t_point p, t_arr2d map, t_arr2d piece, t_player me)
 {
-	int r;
-	int c;
-	int num_overlaps;
-	int score;
-	t_point p_map;
+	int			r;
+	int			c;
+	int			num_overlaps;
+	int			score;
+	t_point		p_map;
 
 	r = 0;
 	num_overlaps = 0;
@@ -170,7 +170,7 @@ int	evaluate_score(t_point p, t_arr2d map, t_arr2d piece, t_player me)
 						++num_overlaps;
 					else
 						score += calculate_score(map, p_map, me);
- 				}
+				}
 				else
 					return (-1);
 			}
@@ -178,7 +178,6 @@ int	evaluate_score(t_point p, t_arr2d map, t_arr2d piece, t_player me)
 		}
 		++r;
 	}
-
 	return (num_overlaps == 1 ? score : -1);
 }
 
