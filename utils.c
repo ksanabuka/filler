@@ -137,28 +137,35 @@ void	str_cpy(char *dst, const char *src)
 		src++;
 }
 
-void app_error(const char *str)
+void	app_error(const char *str)
 {
 	perror(str);
 	exit(-1);
 }
-int is_point_in_segment(int x, int seg_x, int seg_length)
+
+int	is_point_in_segment(int x, int seg_x, int seg_length)
 {
-	return x >= seg_x && x < seg_x + seg_length;
+	return (x >= seg_x && x < seg_x + seg_length);
 }
-int segments_intersect(int seg_x1, int seg_length1, int seg_x2, int seg_length2)
+
+int	segments_intersect(int seg_x1, int seg_length1, int seg_x2, int seg_length2)
 {
 	int left1;
 	int right1;
 	int left2;
 	int right2;
+
 	left1 = seg_x1;
 	right1 = seg_x1 + seg_length1 - 1;
 	left2 = seg_x2;
 	right2 = seg_x2 + seg_length2 - 1;
-	return is_point_in_segment(left1, seg_x2, seg_length2) || is_point_in_segment(right1, seg_x2, seg_length2) || is_point_in_segment(left2, seg_x1, seg_length1) || is_point_in_segment(right2, seg_x1, seg_length1);
+	return (is_point_in_segment(left1, seg_x2, seg_length2) || \
+			is_point_in_segment(right1, seg_x2, seg_length2) || \
+			is_point_in_segment(left2, seg_x1, seg_length1) || \
+			is_point_in_segment(right2, seg_x1, seg_length1));
 }
-int i_abs(int n)
+
+int	i_abs(int n)
 {
-	return n >= 0 ? n : -n;
+	return (n >= 0 ? n : -n);
 }

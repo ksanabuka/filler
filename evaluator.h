@@ -16,6 +16,15 @@
 # include "player.h"
 # include "point.h"
 
+typedef struct	s_all
+{
+	int			r;
+	int			c;
+	int			num_overlaps;
+	int			score;
+	t_player	me;
+}				t_all;
+
 int			get_enemy_distance(t_arr2d map, t_point p, t_player me);
 t_point		evaluate_best_move(t_arr2d map, t_arr2d piece, t_player me);
 

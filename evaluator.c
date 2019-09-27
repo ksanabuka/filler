@@ -12,6 +12,8 @@
 
 #include "evaluator.h"
 #include "utils.h"
+#include <stdlib.h>
+
 
 int	check_radius_not_too_big(int r, t_point p, t_arr2d map)
 {
@@ -145,41 +147,133 @@ static int	check_point(t_point p_map, t_arr2d map, t_player me)
 		return (0);
 }
 
+t_all		*init_all_var(t_player me)
+{
+	t_all *all;
+
+	all = (t_all*)malloc(sizeof(t_all));
+	all->r = 0;
+	all->c = 0;
+	all->num_overlaps = 0;
+	all->score = 0;
+	all->me = me; 
+	return (all);
+}
+
+// int meet_asterix(t_all *a, t_point p, t_arr2d map, t_arr2d piece)
+// {
+// 	t_point		p_map;
+
+// 	if (arr2d_get_item_at(piece, a->r, a->c) == '*')
+// 	{
+// 		p_map = make_point(p.row + a->r, p.col + a->c);
+// 		if (check_point(p_map, map, a->me))
+// 		{
+// 			if (arr2d_get_item_at(map, p_map.row, p_map.col) == a->me.filler)
+// 				a->num_overlaps++;
+// 			else
+// 				a->score += calculate_score(map, p_map, a->me);
+// 			return (1); 
+// 		}
+// 		else
+// 			return (-1);
+// 	}
+// }
+
+// int	evaluate_score(t_point p, t_arr2d map, t_arr2d piece, t_player me)
+// {
+// 	t_all * a;
+// 	int res;
+
+// 	a = init_all_var(me);
+// 	while (a->r < piece.num_rows)
+// 	{
+// 		a->c = 0;
+// 		while (a->c < piece.num_cols)
+// 		{
+// 			if (meet_asterix(a, p, map, piece) == 1)
+// 				++a->c;
+// 			else 
+// 				return (-1);
+// 		}
+// 		++a->r;
+// 	}
+// 	res = a->num_overlaps == 1 ? a->score : -1;
+// 	free(a);
+// 	return (res);
+// }
+
 int	evaluate_score(t_point p, t_arr2d map, t_arr2d piece, t_player me)
 {
-	int			r;
-	int			c;
-	int			num_overlaps;
-	int			score;
+	
+	t_all * a;
+	int res;
 	t_point		p_map;
 
-	r = 0;
-	num_overlaps = 0;
-	score = 0;
-	while (r < piece.num_rows)
+	a = init_all_var(me);
+	while (a->r < piece.num_rows)
 	{
-		c = 0;
-		while (c < piece.num_cols)
+		a->c = 0;
+		while (a->c < piece.num_cols)
 		{
-			if (arr2d_get_item_at(piece, r, c) == '*')
+			if (arr2d_get_item_at(piece, a->r, a->c) == '*')
 			{
-				p_map = make_point(p.row + r, p.col + c);
-				if (check_point(p_map, map, me))
+				p_map = make_point(p.row + a->r, p.col + a->c);
+				if (check_point(p_map, map, a->me))
 				{
-					if (arr2d_get_item_at(map, p_map.row, p_map.col) == me.filler)
-						++num_overlaps;
+					if (arr2d_get_item_at(map, p_map.row, p_map.col) == a->me.filler)
+						a->num_overlaps++;
 					else
-						score += calculate_score(map, p_map, me);
+						a->score += calculate_score(map, p_map, a->me);
 				}
 				else
 					return (-1);
 			}
-			++c;
+			++a->c;
 		}
-		++r;
+		++a->r;
 	}
-	return (num_overlaps == 1 ? score : -1);
+	res = a->num_overlaps == 1 ? a->score : -1;
+	free(a); 
+	return (res);
 }
+
+// int	evaluate_score(t_point p, t_arr2d map, t_arr2d piece, t_player me)
+// {
+// 	int			r;
+// 	int			c;
+// 	int			num_overlaps;
+// 	int			score;
+// 	t_point		p_map;
+
+// 	r = 0;
+// 	num_overlaps = 0;
+// 	score = 0;
+// 	while (r < piece.num_rows)
+// 	{
+// 		c = 0;
+// 		while (c < piece.num_cols)
+// 		{
+// 			if (arr2d_get_item_at(piece, r, c) == '*')
+// 			{
+// 				p_map = make_point(p.row + r, p.col + c);
+// 				if (check_point(p_map, map, me))
+// 				{
+// 					if (arr2d_get_item_at(map, p_map.row, p_map.col) == me.filler)
+// 						++num_overlaps;
+// 					else
+// 						score += calculate_score(map, p_map, me);
+// 				}
+// 				else
+// 					return (-1);
+// 			}
+// 			++c;
+// 		}
+// 		++r;
+// 	}
+// 	return (num_overlaps == 1 ? score : -1);
+// }
+
 
 t_point	evaluate_best_move(t_arr2d map, t_arr2d piece, t_player me)
 {

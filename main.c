@@ -17,8 +17,6 @@
 #include "point.h"
 #include "evaluator.h"
 #include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 
 void	write_option(t_point p, int fd)
 {
